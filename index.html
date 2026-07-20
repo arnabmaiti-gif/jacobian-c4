@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>An essentially four-dimensional counterexample to the Jacobian conjecture</title>
-<meta name="description" content="An explicit polynomial map C^4 -> C^4 with constant Jacobian determinant -2 and a seven-point fiber, not equivalent to any padded three-dimensional counterexample. With exact-arithmetic verification scripts.">
+<meta name="description" content="An explicit polynomial map C^4 -> C^4 with constant Jacobian determinant -2 and a seven-point fiber, constructed natively in dimension 4. With exact-arithmetic verification scripts.">
 <script>
 MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] } };
 </script>
@@ -59,11 +59,13 @@ MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] } }
 <strong>TL;DR.</strong> Following Levent Alp&ouml;ge's July 19 counterexample to the Jacobian conjecture in
 \(\mathbb{C}^3\), we run the underlying cubic-factorization construction one degree up and obtain an explicit
 degree-10 polynomial map \(F:\mathbb{C}^4\to\mathbb{C}^4\) with integer coefficients, constant Jacobian
-determinant \(-2\), and a verified <em>seven-point</em> fiber. Its generic fiber has at least 7 points, so it is
-<em>not</em> a re-coordinatization or identity-padding of any known three-dimensional example (which have generic
-fiber sizes 3, 4, &hellip;, 100, or powers of 3): it is, to our knowledge, the first published counterexample that
-is genuinely four-dimensional. All claims are certified by exact rational arithmetic in SymPy;
+determinant \(-2\), and a verified <em>seven-point</em> fiber. All claims are certified by exact rational arithmetic in SymPy;
 <a href="#verification">run the scripts yourself</a>.
+<em>Precise novelty claim:</em> the map is provably not a re-coordinatization or identity-padding of
+Alp&ouml;ge's map, and the construction provably cannot be carried out in \(\mathbb{C}^3\); to our knowledge it
+is the first counterexample <em>constructed natively</em> in dimension 4. Whether it is equivalent to a padding
+of a same-fiber-degree member of the jacobianfun \(\mathbb{C}^3\) family is not settled by fiber counts
+(see &sect;4).
 </div>
 
 <h2>1. Background</h2>
@@ -104,9 +106,10 @@ $$F(1,-1,-3,-1) \;=\; F(-1,1,-3,1) \;=\; F\!\left(0,0,\tfrac12,0\right) \;=\; (0
 <p>
 Both statements are finite computations in exact rational arithmetic (no floating point, no genericity
 assumptions), certified by the scripts below. In particular the Jacobian conjecture fails in \(\mathbb{C}^4\)
-by an example native to that dimension.
+by an example constructed natively in that dimension.
 </p>
 <p>The full seven-point fiber, corresponding to the target quartic \(t^3 - t = t(t-1)(t+1)\):</p>
+<div style="overflow-x:auto">
 <table>
 <tr><th>Point</th><th>Sheet (choice of linear factor)</th></tr>
 <tr><td>\((1,-1,-3,-1)\)</td><td>\(L \sim t\)</td></tr>
@@ -115,12 +118,14 @@ by an example native to that dimension.
 <tr><td>\(\left(\tfrac{i\sqrt2}{2},\,-1+i\sqrt2,\,6+2i\sqrt2,\,-2-i\sqrt2\right)\) and conjugate</td><td>\(L \sim t-1\)</td></tr>
 <tr><td>\(\left(\tfrac{i\sqrt2}{2},\,1+i\sqrt2,\,6-2i\sqrt2,\,2-i\sqrt2\right)\) and conjugate</td><td>\(L \sim t+1\)</td></tr>
 </table>
+</div>
 
 <h2>3. The construction</h2>
 <p>
 Take \(L(t)=xt+\beta\) and a cubic \(Q(t)=\gamma_3t^3+\gamma_2t^2+\gamma_1t+\gamma_0\), so
 \(L\cdot Q\) is a quartic with coefficients \(c_4,\dots,c_0\), and let
-\(\rho=\operatorname{Res}(L,Q)\). The coefficient&ndash;resultant map satisfies the exact polynomial identity
+\(\rho=\operatorname{Res}(L,Q)\) (classical convention; SymPy's <code>resultant</code> returns the opposite
+sign, which changes nothing below). The coefficient&ndash;resultant map satisfies the exact polynomial identity
 </p>
 $$\det\frac{\partial(c_4,c_3,c_2,c_1,c_0,\rho)}{\partial(x,\beta,\gamma_3,\gamma_2,\gamma_1,\gamma_0)}
 = -2\rho^2,$$
@@ -162,10 +167,16 @@ Because fixing \(\rho\) leaves a residual \(\mu_{m-1}\) scaling ambiguity per ro
 is \(n(n-2)\): size 3 in \(\mathbb{C}^3\) (Alp&ouml;ge's map), 8 for the map above, 15 in \(\mathbb{C}^5\), &hellip;
 </p>
 <p>
-Since generic fiber cardinality is invariant under pre- and post-composition with polynomial automorphisms,
-and every previously published example has generic fiber size in \(\{3,4,5,\dots,100\}\cap\mathbb{C}^3\)-land
-or \(3^k\) (compositions) with padding preserving those values, the certified 7-point fiber
-(generic degree \(\ge 7\) by Zariski's main theorem) separates this map from all of them.
+What does the certified 7-point fiber buy? Generic fiber cardinality is invariant under pre- and
+post-composition with polynomial automorphisms, and by Zariski's main theorem a quasi-finite map's fibers
+never exceed its generic degree, so the generic degree here is at least 7. That rules out any
+re-coordinatization or identity-padding of Alp&ouml;ge's map (generic degree 3). It does <em>not</em> by
+itself distinguish this map from paddings of the degree-7 or degree-8 members of the jacobianfun
+\(\mathbb{C}^3\) family published hours earlier: settling that would need an invariant finer than fiber
+counts, which we have not attempted. The defensible novelty claims are therefore that the construction is
+the first to produce a counterexample <em>natively</em> in dimension 4, that the Smith-theory obstruction
+of &sect;3 shows it cannot be carried out in \(\mathbb{C}^3\), and that the map itself is new as an explicit
+example. Whether it is genuinely inequivalent to every padded \(\mathbb{C}^3\) example remains open.
 </p>
 
 <h2 id="verification">5. Verify it yourself</h2>

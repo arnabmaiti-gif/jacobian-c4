@@ -4,9 +4,12 @@
 
 An explicit degree-10 polynomial map F: C⁴ → C⁴ with integer coefficients,
 constant Jacobian determinant −2, and a verified seven-point fiber (including a
-three-point rational collision). Its generic fiber has ≥ 7 points, so it is not
-equivalent to any padded three-dimensional counterexample — to our knowledge the
-first published counterexample native to dimension 4.
+three-point rational collision). Its generic fiber has ≥ 7 points, so it is not a
+re-coordinatization or identity-padding of Alpöge's map, and the construction
+provably cannot be carried out in C³ — to our knowledge the first counterexample
+*constructed natively* in dimension 4. (Whether it is equivalent to a padding of a
+same-fiber-degree member of the jacobianfun C³ family is not settled by fiber
+counts; see §4 of the webpage.)
 
 Built by running the cubic-factor/resultant construction behind Alpöge's
 July 19, 2026 counterexample in C³ one degree up (quartic = linear × cubic,
