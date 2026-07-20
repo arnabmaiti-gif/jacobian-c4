@@ -33,5 +33,5 @@ Original C³ counterexample: Levent Alpöge with Claude Fable 5 (question posed 
 Akhil Mathew). Derivation this generalizes:
 [aaronlou.com/jacobian_counterexample_derivation.pdf](https://aaronlou.com/jacobian_counterexample_derivation.pdf).
 C³ family of every generic fiber degree: [jacobianfun.org](https://jacobianfun.org).
-This note: Arnab Maiti, with the construction and verification carried out with
-Claude (Fable 5) agents. Not peer-reviewed; corrections welcome via issues.
+This note: Arnab Maiti and Esha Manideep, with the construction and verification
+carried out with Claude (Fable 5) agents. Not peer-reviewed; corrections welcome via issues.
