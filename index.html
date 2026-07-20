@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An essentially four-dimensional counterexample to the Jacobian conjecture</title>
+<meta name="description" content="An explicit polynomial map C^4 -> C^4 with constant Jacobian determinant -2 and a seven-point fiber, not equivalent to any padded three-dimensional counterexample. With exact-arithmetic verification scripts.">
+<script>
+MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  :root {
+    --bg: #fdfdfb; --fg: #1a1a1a; --muted: #555; --accent: #8b3a2f;
+    --box: #f3f1ec; --border: #ddd8cf; --code-bg: #f0eee9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a; --fg: #e6e3dc; --muted: #a49f94; --accent: #e0876f;
+      --box: #1d2026; --border: #33373f; --code-bg: #1d2026;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 17px/1.65 Georgia, 'Times New Roman', serif;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+  h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 .5rem; }
+  h2 { font-size: 1.25rem; margin-top: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: .3rem; }
+  .byline { color: var(--muted); font-style: italic; margin-bottom: 2rem; }
+  .tldr { background: var(--box); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+          padding: 1rem 1.25rem; border-radius: 4px; margin: 1.5rem 0; }
+  .tldr strong:first-child { color: var(--accent); }
+  code, pre { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: .85em; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px;
+        padding: 1rem; overflow-x: auto; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; margin: 1rem 0; width: 100%; }
+  th, td { border: 1px solid var(--border); padding: .4rem .7rem; text-align: left; font-size: .95em; }
+  th { background: var(--box); }
+  .caveat { background: var(--box); border: 1px solid var(--border); padding: 1rem 1.25rem;
+            border-radius: 4px; font-size: .95em; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);
+           color: var(--muted); font-size: .9em; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>An essentially four-dimensional counterexample to the Jacobian conjecture</h1>
+<p class="byline">Arnab Maiti &middot; 20 July 2026 &middot; found and verified with Claude (Fable&nbsp;5) &middot;
+<a href="https://github.com/arnabmaiti-gif/jacobian-c4">code &amp; verification scripts</a></p>
+
+<div class="tldr">
+<strong>TL;DR.</strong> Following Levent Alp&ouml;ge's July 19 counterexample to the Jacobian conjecture in
+\(\mathbb{C}^3\), we run the underlying cubic-factorization construction one degree up and obtain an explicit
+degree-10 polynomial map \(F:\mathbb{C}^4\to\mathbb{C}^4\) with integer coefficients, constant Jacobian
+determinant \(-2\), and a verified <em>seven-point</em> fiber. Its generic fiber has at least 7 points, so it is
+<em>not</em> a re-coordinatization or identity-padding of any known three-dimensional example (which have generic
+fiber sizes 3, 4, &hellip;, 100, or powers of 3): it is, to our knowledge, the first published counterexample that
+is genuinely four-dimensional. All claims are certified by exact rational arithmetic in SymPy;
+<a href="#verification">run the scripts yourself</a>.
+</div>
+
+<h2>1. Background</h2>
+<p>
+The Jacobian conjecture (Kraus 1884 in two variables; Keller 1939 in general) asserted that every polynomial map
+\(\mathbb{C}^n\to\mathbb{C}^n\) whose Jacobian determinant is a nonzero constant has a polynomial inverse.
+On 19 July 2026 Levent Alp&ouml;ge announced an explicit counterexample in \(\mathbb{C}^3\), found with the AI model
+Claude Fable&nbsp;5: a map with \(\det JF\equiv-2\) sending three distinct points to one point.
+A reproducible derivation of that map (the <a href="https://aaronlou.com/jacobian_counterexample_derivation.pdf">
+cubic-factor and resultant construction</a>) reveals the mechanism: parametrize factorizations of a cubic
+\(L(t)\,Q(t)\) with \(L\) linear and \(Q\) quadratic, normalize the resultant \(\rho=\operatorname{Res}(L,Q)\) to a
+constant to make the coefficient map &eacute;tale, and observe that a cubic has <em>three</em> choices of linear
+factor, so the map is generically 3-to-1.
+Within a day, <a href="https://jacobianfun.org/jacobian-explained">jacobianfun.org</a> published a family
+realizing every generic fiber degree \(n\ge 3\), explicitly staying inside \(\mathbb{C}^3\).
+</p>
+<p>
+This note asks the orthogonal question: does the factorization mechanism itself generalize <em>upward in
+dimension</em>? It does.
+</p>
+
+<h2>2. The map</h2>
+<p>
+Write coordinates \((x, y_1, y_2, y_3)\) on \(\mathbb{C}^4\). Define \(F = (F_1, F_2, F_3, F_4)\):
+</p>
+$$\begin{aligned}
+F_1 ={}& x^3y_2 - 2x^2y_1 + x,\\[4pt]
+F_2 ={}& -2x^4y_1^3y_2 + 4x^3y_1^4 - 7x^3y_1^2y_2 + 12x^2y_1^3 - 8x^2y_1y_2 + x^2y_3\\
+       & + 10xy_1^2 - 3xy_2 + y_1,\\[4pt]
+F_3 ={}& -4x^4y_1^4y_2 + 8x^3y_1^5 - 14x^3y_1^3y_2 + 24x^2y_1^4 - 18x^2y_1^2y_2 + 2x^2y_1y_3\\
+       & + 24xy_1^3 - 10xy_1y_2 + 2xy_3 + 7y_1^2 - 2y_2,\\[4pt]
+F_4 ={}& -2x^4y_1^5y_2 + 4x^3y_1^6 - 8x^3y_1^4y_2 + 14x^2y_1^5 - 12x^2y_1^3y_2 + x^2y_1^2y_3\\
+       & + 17xy_1^4 - 8xy_1^2y_2 + 2xy_1y_3 + 7y_1^3 - 2y_1y_2 + y_3.
+\end{aligned}$$
+<p><strong>Theorem.</strong> \(\det JF = -2\) identically, yet \(F\) is not injective: the fiber over
+\((0,0,-1,0)\) contains the seven distinct points below, including the three-point rational collision</p>
+$$F(1,-1,-3,-1) \;=\; F(-1,1,-3,1) \;=\; F\!\left(0,0,\tfrac12,0\right) \;=\; (0,0,-1,0).$$
+<p>
+Both statements are finite computations in exact rational arithmetic (no floating point, no genericity
+assumptions), certified by the scripts below. In particular the Jacobian conjecture fails in \(\mathbb{C}^4\)
+by an example native to that dimension.
+</p>
+<p>The full seven-point fiber, corresponding to the target quartic \(t^3 - t = t(t-1)(t+1)\):</p>
+<table>
+<tr><th>Point</th><th>Sheet (choice of linear factor)</th></tr>
+<tr><td>\((1,-1,-3,-1)\)</td><td>\(L \sim t\)</td></tr>
+<tr><td>\((-1,1,-3,1)\)</td><td>\(L \sim -t\)</td></tr>
+<tr><td>\((0,0,\tfrac12,0)\)</td><td>factor at infinity</td></tr>
+<tr><td>\(\left(\tfrac{i\sqrt2}{2},\,-1+i\sqrt2,\,6+2i\sqrt2,\,-2-i\sqrt2\right)\) and conjugate</td><td>\(L \sim t-1\)</td></tr>
+<tr><td>\(\left(\tfrac{i\sqrt2}{2},\,1+i\sqrt2,\,6-2i\sqrt2,\,2-i\sqrt2\right)\) and conjugate</td><td>\(L \sim t+1\)</td></tr>
+</table>
+
+<h2>3. The construction</h2>
+<p>
+Take \(L(t)=xt+\beta\) and a cubic \(Q(t)=\gamma_3t^3+\gamma_2t^2+\gamma_1t+\gamma_0\), so
+\(L\cdot Q\) is a quartic with coefficients \(c_4,\dots,c_0\), and let
+\(\rho=\operatorname{Res}(L,Q)\). The coefficient&ndash;resultant map satisfies the exact polynomial identity
+</p>
+$$\det\frac{\partial(c_4,c_3,c_2,c_1,c_0,\rho)}{\partial(x,\beta,\gamma_3,\gamma_2,\gamma_1,\gamma_0)}
+= -2\rho^2,$$
+<p>
+so on the slice \(Y=\{c_3=1,\ \rho=-1\}\subset\mathbb{A}^6\) the retained coefficient map
+\((c_4,c_2,c_1,c_0)\) is everywhere &eacute;tale. (The value \(\rho=-1\) is the rational branch: \(\rho=+1\)
+forces \(\beta^2\equiv-1\bmod x\).) A polynomial chart of \(Y\) is found exactly as in the cubic case,
+cancelling obstructions order by order in \(x\):
+</p>
+$$\beta = 1+xy_1,\qquad
+\gamma_3 = 1-2xy_1+x^2y_2,\qquad
+\gamma_2 = \frac{1-\beta\gamma_3}{x},\qquad
+\gamma_1 = w_1+xy_3,\qquad
+\gamma_0 = y_1w_1+\beta y_3,$$
+<p>
+with \(w_1 = \bigl(2\beta^2\gamma_2-y_1(\beta+1)\bigr)/x\); every apparent division cancels exactly.
+Substituting the chart into \((c_4,c_2,c_1,c_0)\) yields the map above.
+</p>
+<p>
+One structural caveat, and why it is harmless: unlike the cubic case, the chart is <em>not</em> an isomorphism
+onto \(Y\). The rescaling \((L,Q)\mapsto(-L,-Q)\) acts freely on \(Y\) while fixing every \(c_i\) and \(\rho\),
+and Smith theory forbids a free \(\mathbb{Z}/2\) action on contractible affine space, so
+\(Y\not\cong\mathbb{A}^4\). The chart is an injective polynomial immersion with dense image; since
+\(\det JF=-2\) and the seven collisions are verified directly on the final polynomials, nothing in the theorem
+depends on the chart being surjective. The same obstruction proves that the analogous
+<em>direct</em> quartic construction inside \(\mathbb{C}^3\) is impossible, which is why "one degree up" must
+also mean "one dimension up."
+</p>
+
+<h2>4. The general pattern</h2>
+<p>
+For \(L\) linear times \(Q\) of degree \(m\) (total degree \(n=m+1\), in dimension \(n\)), the identity
+generalizes, verified symbolically for \(m=2,3,4\):
+</p>
+$$\det\frac{\partial(c_n,\dots,c_0,\rho)}{\partial(\text{factor coefficients})} = \pm(m-1)\,\rho^2 .$$
+<p>
+So the construction produces counterexamples native to every dimension \(n\ge3\) in characteristic zero.
+Because fixing \(\rho\) leaves a residual \(\mu_{m-1}\) scaling ambiguity per root, the generic fiber size
+is \(n(n-2)\): size 3 in \(\mathbb{C}^3\) (Alp&ouml;ge's map), 8 for the map above, 15 in \(\mathbb{C}^5\), &hellip;
+</p>
+<p>
+Since generic fiber cardinality is invariant under pre- and post-composition with polynomial automorphisms,
+and every previously published example has generic fiber size in \(\{3,4,5,\dots,100\}\cap\mathbb{C}^3\)-land
+or \(3^k\) (compositions) with padding preserving those values, the certified 7-point fiber
+(generic degree \(\ge 7\) by Zariski's main theorem) separates this map from all of them.
+</p>
+
+<h2 id="verification">5. Verify it yourself</h2>
+<p>All scripts use exact rational arithmetic. With <a href="https://docs.astral.sh/uv/">uv</a> installed:</p>
+<pre><code>git clone https://github.com/arnabmaiti-gif/jacobian-c4.git
+cd jacobian-c4/scripts
+uv run --with sympy python independent_check_dim4.py  # det = -2 + rational 3-collision, from the polynomials alone
+uv run --with sympy python verify_all.py              # full construction, all 7 fiber points, identity table
+</code></pre>
+<p>
+<code>independent_check_dim4.py</code> is deliberately minimal: it takes only the four displayed polynomials
+(not the construction) and certifies the theorem in a few seconds. <code>construct.py</code> and
+<code>fiber_direct.py</code> rebuild the map from the factorization construction and derive the fiber.
+</p>
+
+<h2>6. Honest caveats</h2>
+<div class="caveat">
+<ul>
+<li>The <em>theorem</em> (constant determinant + non-injectivity) is machine-certified. Two secondary claims
+currently rest on argument rather than certificate: that the displayed fiber has <em>exactly</em> 7 points
+(factorization classification; the direct Gr&ouml;bner run was too slow), and the generic count
+\(n(n-2)=8\) (Zariski's main theorem gives \(\ge 7\) unconditionally from the certified fiber).</li>
+<li>Nothing here is peer-reviewed, and the field is ~36 hours old. We searched the public record
+(arXiv, jacobianfun and its repo, secondary coverage) on 20 July 2026 and found no prior four-dimensional
+construction beyond identity-padding, but X/Twitter is not fully searchable and independent discovery is
+likely: the construction is the natural next step from the public derivation of the
+\(\mathbb{C}^3\) map.</li>
+<li>The two-variable Jacobian conjecture remains open, as does the Dixmier conjecture for the first Weyl
+algebra.</li>
+</ul>
+</div>
+
+<h2>7. Credits and references</h2>
+<ul>
+<li>L. Alp&ouml;ge, announcement of the \(\mathbb{C}^3\) counterexample (X, 19 July 2026), found with
+Claude Fable&nbsp;5, with the question posed by Akhil Mathew.</li>
+<li><a href="https://aaronlou.com/jacobian_counterexample_derivation.pdf">Deriving an Explicit Polynomial
+Counterexample to the Jacobian Conjecture</a> (20 July 2026): the cubic-factor and resultant construction
+this note generalizes.</li>
+<li><a href="https://jacobianfun.org/jacobian-explained">jacobianfun.org</a> and
+<a href="https://github.com/algal/jacobianfun">algal/jacobianfun</a>: the \(\mathbb{C}^3\) family of every
+generic fiber degree \(n\ge3\) (A. Gallagher et&nbsp;al.).</li>
+<li><a href="https://zzhang-iu.github.io/papers/direct-consequences-jacobian/index.html">Z. Zhang, Direct
+Consequences of the Three-Dimensional Counterexample</a> (padding and downstream conjectures).</li>
+<li>This note: construction, chart, and verification carried out with Claude (Fable&nbsp;5) agents;
+all mathematics checked in exact arithmetic by the included scripts.</li>
+</ul>
+
+<footer>
+Arnab Maiti &middot; 20 July 2026 &middot; corrections welcome via
+<a href="https://github.com/arnabmaiti-gif/jacobian-c4/issues">GitHub issues</a>.
+</footer>
+
+</main>
+</body>
+</html>
